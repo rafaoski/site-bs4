@@ -14,8 +14,8 @@ var sourcemaps = require('gulp-sourcemaps');
 gulp.task('serve', ['sass', 'copy-fonts',  'scripts'], function() {
 
     browserSync.init({
-        // proxy: "localhost/processwire-folder/",
-        proxy: "http://site-bs4.dev/",
+        proxy: "localhost/processwire-folder/",
+        // proxy: "http://site-bs4.dev/",
         notify: false
             // browser: "chrome"
             // browser: "firefox"
