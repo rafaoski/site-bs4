@@ -1,0 +1,321 @@
+html {
+// FOOTER TO BOOTTOM --
+position: relative;
+min-height: 100%;
+}
+
+img {
+    max-width: 100%;
+    height: auto;      
+}
+
+// CHANGE DECORATION AND ADD TRANSITION
+.display-4 {
+     a {
+         text-decoration: none;
+         transition: $t-out;
+     }
+}
+
+// HEADER AREA --
+header {
+  background-color: $light-dark;
+  color: $light-blue;
+  margin-top: -1rem;
+
+}
+#header-content {
+      height: 70vh;
+      h2 {
+          color: $light-white;
+      }
+  }
+  
+// HEADER JARALLAX
+.jarallax {
+    position: relative;
+    z-index: 0;
+}
+.jarallax > .jarallax-img {
+    position: absolute;
+    object-fit: cover;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+.cont-jar {
+    background-color: $trans-dark;
+    color: $like-orange;
+    height: 100vh;
+}
+
+.headerwrap-scrool {
+    background-color: $trans-white;
+    border-radius: 90%;
+    padding: 2.2em 1.4em 1.1em;
+    border: 2px solid $like-orange;
+    transition: $t-out;
+    &:hover {
+       background-color: $dark;
+       color: $light-white;
+       border: 3px solid $red;
+    }
+}
+
+// NAVIGATION --
+#main-nav {
+background-color: $my-nav ;
+padding: .5rem;
+font-size: 1.2rem;
+border-top: 2px solid $light-white;
+
+  #navbarNav a {
+    color: $light-white;
+    transition: $t-out;
+    &:hover {
+      color: $like-orange;
+      text-decoration: none;
+    }
+  }
+}
+
+// LANGUAGE NAVIGATION
+#lang-menu {
+    
+    .btn-secondary {
+         background-color: $transition-gray;
+         min-width: 130px;
+    }
+    
+    .dropdown-menu {
+        background-color: $trans-dark;
+    }
+    
+}
+
+// LOGO --
+.logo {
+   img {
+     background-color: $transparent;
+     padding: .3rem;
+     margin: .2rem;
+     border: 2px solid $transparent;
+     transition: $t-out;
+     &:hover {
+      background-color: $light-gray;
+       padding: .3rem;
+       margin: .2rem;
+       border: 2px solid $like-orange;
+   }
+
+   }
+}
+
+// SIDEBAR
+#sidebar {
+    .sidebar-global, .sidebar-page {
+        li {
+            list-style: none;
+        }
+    }
+}
+
+ // 1 - HOME PAGE --
+  // Owl Carousel Front Slider
+.owl-carousel {
+  .item-front {
+    // margin: .5rem;
+    border: 3px solid $light-white;
+    transition: $t-out;
+    &:hover {
+       border: 3px solid $my-nav;
+    }
+    }
+  }
+  
+   // Accordion ( home )
+  #accordion .card-header {
+    background-color: $dark-blue;
+  }
+  
+  // Portfolio Slider ( home )
+  .owl-portfolio {
+      .item {
+          transition: $t-out;
+          background-color: $solarized-dark;
+          a {
+              color: $orange;
+          }
+          &:hover {
+          background-color: $light-white;
+      }
+      } 
+  }
+  
+  
+// 2 - NEWS PAGES --
+.content-news img {
+    border: 4px solid $light-gray;
+    transition: $t-out;
+    
+      &:hover {
+        border: 4px solid $dark-gray;
+        background-color: $soft-gray;
+        transform: scale(0.9);
+         }
+}
+/*-- SINGLE NEWS*/
+.cont-news {
+    img {
+        border: 4px solid $light-gray;
+        transition: $t-out;
+        
+          &:hover {
+            border: 4px solid $dark-gray;
+            background-color: $red;
+            transform: scale(0.9);
+             }
+    }
+}
+#CommentForm {
+    background-color: $dark-gray;
+    padding: 2rem;
+    margin-bottom: 1rem;
+    color: $orange;
+    
+    button {
+        background-color: $dark-blue;
+        padding: .3rem;
+        color: aliceblue;
+        border: 2px solid $light-white;
+        border-radius: 2px;
+        transition: $t-out;
+        &:hover {
+            background-color: $soft-gray;
+        }
+    }
+} 
+
+// 3 - PORTFOLIO PAGES --
+.content-portfolio  {
+    img {
+    border: 4px solid $light-gray;
+    transition: $t-out;
+    
+      &:hover {
+        border: 4px solid $dark-gray;
+        background-color: $soft-gray;
+         }
+    }
+    .badge-info {
+        transition: $t-out;
+        &:hover {
+            background-color: $orange;
+        }
+    }
+}
+// -- SINGLE PORTFOLIO
+.cont-portfolio {
+    img {
+        border: 4px solid $light-gray;
+        transition: $t-out;
+        
+          &:hover {
+            border: 4px solid $dark-gray;
+            background-color: $soft-gray;
+             }
+        }
+        .badge-info {
+            transition: $t-out;
+            &:hover {
+                background-color: $orange;
+            }
+        }
+}
+
+// 4 - AUTHORS PAGE --
+.auth-cont img {
+transition: $t-out;
+    &:hover {
+        border-radius: 50%;
+        border: 4px solid $orange;
+    }
+}
+
+// 5 - TAGS PAGES
+#links {
+    a {
+        margin: .2em;
+        transition: $t-out;
+        color: red;
+        text-decoration: none;
+        border: 1px solid $orange;
+            &:hover {
+                background-color: $orange;
+                color: $light-white!important;
+            }
+    }
+
+}
+// -- SINGLE TAG
+.content-tag img {
+    border: 15px solid $light-gray;
+    transition: $t-out;
+    
+      &:hover {
+        border: 4px solid $dark-gray;
+        background-color: $soft-gray;
+         }
+}
+
+
+// SHARE BUTTONS
+.MarkupSocialShareButtons {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        margin-left: -2.5rem;
+        
+        li {
+            list-style: none;
+            border-radius: 90%;
+            padding: .5rem;
+        }
+}
+
+// FOOTER --
+footer {
+   background-color: $solarized-dark;
+   color: $light-white;
+   display:none;
+   position: absolute;
+   left: 0;
+   bottom: 0;
+   height: auto;
+   width: 100%;
+   a {
+       color: $gray;
+       transition: $t-out;
+       &:hover {
+        color: $light-white;
+       }
+   }
+}
+
+//Scrool To Top
+.scrollup {
+  bottom: 9em;
+  color: $like-orange;
+  display: none;
+  /*padding: .5rem  .7rem;*/
+  position: fixed;
+  right: 2em;
+  transition: $t-out;
+  z-index: 1999;
+  &:hover {
+    color: darken($light-white, 90%);
+  }
+
+}

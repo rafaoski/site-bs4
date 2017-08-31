@@ -1,0 +1,33 @@
+{
+  "name": "processwire-bootstrap-starter",
+  "description": "Simple Starter Based on Bootstrap 4 for Processwire With Browser Sync and Gulp-SASS",
+  "main": "index.js",
+  "authors": [
+    "Rafał Olszewicz"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "bootstrap",
+    "4",
+    "gulp",
+    "starter",
+    "bower"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "font-awesome": "^4.7.0",
+    "owl.carousel": "^2.2.1",
+    "headroom.min": "https://unpkg.com/headroom.js/dist/headroom.min.js",
+    "mixitup": "^3.2.1",
+    "cookieconsent": "^3.0.4",
+    "lazyloadxt": "^1.0.5",
+    "bootstrap": "v4.0.0-beta"
+  }
+}

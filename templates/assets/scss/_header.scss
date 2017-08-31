@@ -1,0 +1,33 @@
+// HEADROOM.JS
+    .animated {
+      -webkit-animation-duration: 0.5s;
+         -moz-animation-duration: 0.5s;
+           -o-animation-duration: 0.5s;
+              animation-duration: 0.5s;
+      -webkit-animation-fill-mode: both;
+         -moz-animation-fill-mode: both;
+           -o-animation-fill-mode: both;
+              animation-fill-mode: both;
+    }
+    
+// EFFECT WITH Animate.css
+/*@import "effect/slide";
+@import "effect/swing";
+@import "effect/flip";*/
+@import "effect/bounce";
+@import "effect/outdown";
+
+/*.headroom {
+    will-change: transform;
+    transition: transform 200ms linear;
+}
+.headroom--pinned {
+    transform: translateY(0%);
+    
+}
+.headroom--unpinned {
+    transform: translateY(-100%);
+}
+
+.headroom--not-top {
+}*/

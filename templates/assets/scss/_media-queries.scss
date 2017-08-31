@@ -1,0 +1,100 @@
+/*UP*/
+@include media-breakpoint-up(xs) {}
+@include media-breakpoint-up(sm) {}
+@include media-breakpoint-up(md) {}
+@include media-breakpoint-up(lg) {}
+@include media-breakpoint-up(xl) {}
+
+
+/*DOWN*/
+@include media-breakpoint-down(xs) {
+    // HEADER JARALLAX
+    .cont-jar { 
+        .display-3 {
+            font-size: 1.8rem;
+        }
+        .display-4 {
+            font-size: 1.5rem;
+        }
+    }
+    
+ #header-content {
+    height: 45vh;
+    margin-bottom: 1.5rem;
+}
+
+}
+
+@include media-breakpoint-down(sm) {
+    // Hide Some Elements With Small Screen
+    .logo, .breadcrumbs, .m-txt {
+       display: none;
+    }
+// Header Info Carousel    
+.owl-info {
+    padding-top: .2rem;
+}
+
+}
+@include media-breakpoint-down(md) {
+    // Hide Some Elements With Medium Screen
+    .s-butt {
+        display: none;
+    }
+}
+@include media-breakpoint-down(lg) {
+    // Hide Some Elements With Large Screen
+        .s-butt {
+        display: none;
+    }
+   .item-info h3 {
+        font-size: 25px;
+   } 
+}
+@include media-breakpoint-down(xl) {
+  .display-4 {
+    font-size: 35px;
+  }
+}
+
+/*ONLY*/
+@include media-breakpoint-only(xs) {
+  .display-4 {
+    font-size: 25px;
+  }
+}
+@include media-breakpoint-only(sm) {
+     .display-4 {
+    font-size: 27px;
+  }
+          .cont-jar { 
+        .display-3 {
+            font-size: 3.1rem;
+        }
+        .display-4 {
+            font-size: 2.4rem;
+        }
+    }
+}
+
+@include media-breakpoint-only(md) {
+ .display-4 {
+    font-size: 30px;
+  }
+  // HEADER JARALLAX
+    .cont-jar { 
+        .display-3 {
+            font-size: 3.5rem;
+        }
+        .display-4 {
+            font-size: 2.8rem;
+        }
+    }
+}
+@include media-breakpoint-only(lg) {
+     .display-4 {
+    font-size: 33px;
+  } 
+  
+}
+@include media-breakpoint-only(xl) {}

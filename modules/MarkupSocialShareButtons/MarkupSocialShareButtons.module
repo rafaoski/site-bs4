@@ -1,0 +1,623 @@
+<?php
+
+/**
+ *  Markup Social Share Buttons
+ *
+ *  Helper markup module for creating social share buttons on a page. It generates
+ *  a simple UL list with the correct share links for various social media platforms
+ *  that support share links. Maybe not your needed list but you can turn them on/off and
+ *  put them in order using the options "show".
+ *
+ *  There's a theme option to choose from various PNG icons premade
+ *  It's made easy to create your own and put them locally in your site structure.
+ *
+ *
+ * @author  Philipp Urlich <philipp@urlich.ch>
+ *
+ * ProcessWire 2.x
+ * Copyright (C) 2010 by Ryan Cramer
+ * Licensed under GNU/GPL v2, see LICENSE.TXT
+ *
+ * http://www.processwire.com
+ * http://www.ryancramer.com
+ *
+ */
+
+
+/**
+ *
+ * Reference:
+ *
+ * https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2Fsitepoint.com%2F
+ * https://plus.google.com/share?url=http%3A%2F%2Fsitepoint.com%2F
+ * https://twitter.com/intent/tweet?url=http%3A%2F%2Fsitepoint.com%2F&text=SitePoint&hashtags=web,development
+ * http://www.linkedin.com/shareArticle?mini=true&url=http%3A%2F%2Fsitepoint.com%2F&title=SitePoint
+ */
+
+
+
+class MarkupSocialShareButtons extends WireData implements Module, ConfigurableModule {
+
+    /**
+     * getModuleInfo is a method required by all modules to tell ProcessWire about them
+     * @return array
+     */
+    public static function getModuleInfo() {
+
+        return array(
+            'title' => 'Social Share Buttons',
+            'version' => 103,
+            'summary' => 'Module to help create social share links. Comes with premade examples for styling and popup script. Create your own themes easily.',
+            'href' => 'https://processwire.com/talk/topic/8353-markupsocialsharebuttons/',
+            'author' => 'Soma',
+            'singular' => true,
+            'autoload' => false,
+            );
+
+    }
+
+    const THEMEPATH_LOCAL = "themes";
+
+    protected $themeUrl;
+
+    protected $services = array(
+            "email",
+            "facebook",
+            "googleplus",
+            "twitter",
+            "linkedin",
+            "tumblr",
+            "reddit",
+            "pinterest",
+        );
+
+    /**
+     * Social share base urls
+     */
+    protected $defaults = array(
+
+        "show" => array(
+            "email",
+            "facebook",
+            "googleplus",
+            "twitter",
+            "linkedin",
+            "tumblr",
+            // "reddit",
+            // "pinterest",
+            ),
+
+        "url" => "",
+        "title" => "",
+        "text" => "",
+        "source" => "", // linkedin
+        "tags" => "", // twitter
+        "media" => "", // pinterest, url img/video urlencoded
+
+        "title_fields" => "headline|title", // if no title set use these fields to search
+        "text_fields" => "description|summary|body", // if no text set use these fields to search
+        "outer_wrapper_tag" => "ul",
+        "item_wrapper_tag" => "li",
+
+        "theme" => null,
+        "namespace" => "mssb-",
+        "char_limit" => 100,
+        "char_limit_sypnosis" => " …",
+
+        /* Email Params
+            subject     : the mail subject (needs caution)
+            body        : the mail body
+         */
+        "email_url"             => "mailto:",
+        "email_params"          => "?subject={title}&body=%0A%0A{url}%0A%0A{text}",// %0A = linebreak
+        "email_icon"            => "<i>email</i>",
+
+        /* Facebook Params
+            u           : the page URL
+         */
+        "facebook_url"          => "https://www.facebook.com/sharer/sharer.php",
+        "facebook_params"       => "?u={url}",
+        "facebook_icon"         => "<i>facebook</i>",
+
+        /* Google+ Params
+            url         : the page URL
+         */
+        "googleplus_url"        => "https://plus.google.com/share",
+        "googleplus_params"     => "?url={url}",
+        "googleplus_icon"       => "<i>google+</i>",
+
+        /* Twitter Params
+            url         : the page URL
+            text        : optional text
+            hashtags    : a comma-delimited set of hashtags
+         */
+        "twitter_url"           => "https://twitter.com/intent/tweet",
+        "twitter_params"        => "?url={url}&text={text}&hashtags={tags}",
+        "twitter_icon"          => "<i>twitter</i>",
+
+        /* LinkedIn Params
+            mini        : must be set to ‘true’
+            url         : the page URL
+            source      : the company/named source (200 characters maximum)
+            title       : article title (200 characters maximum)
+            summary     : a short description (256 characters maximum)
+         */
+        "linkedin_url"          => "http://www.linkedin.com/shareArticle",
+        "linkedin_params"       => "?mini=true&url={url}&title={title}&summary={text}&source={source}",
+        "linkedin_icon"         => "<i>linkedin</i>",
+
+
+        /* Tumblr Params
+            url         : the page URL
+            name        : article title
+            description : article description
+         */
+        "tumblr_url"          => "http://www.tumblr.com/share/link",
+        "tumblr_params"       => "?url={url}&name={title}&description={text}",
+        "tumblr_icon"         => "<i>tumblr</i>",
+
+        /* Reddit Params
+            url         : the page URL
+            title       : article title
+         */
+        "reddit_url"          => "http://www.reddit.com/submit",
+        "reddit_params"       => "?url={url}&title={title}",
+        "reddit_icon"         => "<i>reddit</i>",
+
+        /* Pinterest Params
+            url         : the page URL
+            media       : Mandatory if you use this service, media full http url (image, video)
+            description : article description or title
+         */
+        "pinterest_url"          => "https://pinterest.com/pin/create/bookmarklet/",
+        "pinterest_params"       => "?media={media}&url={url}&description={text}",
+        "pinterest_icon"         => "<i>tumblr</i>",
+
+    );
+
+
+    public function __construct(){
+
+        $this->set("themeUrl", '');
+
+        if(isset($this->config->MarkupSocialShareButtonsServices) && is_array($this->config->MarkupSocialShareButtonsServices)) {
+            $this->addServices($this->config->MarkupSocialShareButtonsServices);
+            // $this->data = array_merge($this->data, $this->config->MarkupSocialShareButtons);
+        }
+
+        foreach($this->defaults as $key => $value){
+            $this->set($key, $value);
+        }
+
+    }
+
+    /**
+     * Init called when the module is initialized by PW and API is available
+     * Though no current page is available (as far as I know)
+     */
+    public function init() {
+
+        if($this->config->ajax && $this->input->post->MarkupSocialShareButtons == 'loadtheme'){
+            $theme = $this->sanitizer->pageName($this->input->post->theme);
+            if($theme) {
+                echo $this->render(array('theme' => $theme));
+                exit;
+            }
+        }
+
+    }
+
+    /**
+     * Method to set a theme to the module's output
+     * It will try to load the them file containing the markup for the icons
+     * used inside <a>'s
+     *
+     * A custom theme file must be located somewhere inside /site/
+     * Create a folder for example "/site/templates/socialbuttontheme/mytheme/" and in there a "theme.php".
+     * /site/templates/socialbuttontheme/mytheme/theme.php
+     *
+     * Now you can have the module use it by giving it the path relative from the templates folder
+     *
+     * $options = array("theme" => "templates/socialbuttontheme/mytheme");
+     *
+     * @param module $this The module instance as it allows for chaining method calls
+     */
+    protected function setTheme($name) {
+
+        if(!$name) return $this;
+
+        if(is_array($name) && count($name)){
+            $this->data = array_merge($this->data, $name);
+            return $this;
+        }
+
+        // if a local custom theme file found inside /site/templates/ folder, load it
+        $themeUrl = $this->config->urls->site . "/" . $name . "/";
+        $this->themeUrl = $themeUrl;
+        $themePath = $this->config->paths->site . "/" . $name . "/";
+        $themeFilename = $themePath . "theme.php";
+        if(file_exists($themeFilename)) {
+            include($themeFilename);
+            if(isset($socialIcons) && is_array($socialIcons)) {
+                $this->data = array_merge($this->data, $socialIcons);
+            }
+            return $this;
+        }
+
+        // so far no theme file so try from within module directory /theme/ folder
+        $themeUrl = $this->config->urls->{$this->className} . self::THEMEPATH_LOCAL . "/" . $name . "/";
+        $this->themeUrl = $themeUrl;
+        $themePath = $this->config->paths->{$this->className} . self::THEMEPATH_LOCAL . "/" . $name . "/";
+        $themeFilename = $themePath . "theme.php";
+        if(file_exists($themeFilename)) {
+            include($themeFilename);
+            if(isset($socialIcons) && is_array($socialIcons)) {
+                $this->data = array_merge($this->data, $socialIcons);
+            }
+            return $this;
+        }
+
+        return $this;
+
+    }
+
+    /**
+     * Render the HTML markup and return it
+     *
+     * @param  array  $options Options array for various settings
+     * @return string          Returns markup for output
+     */
+    public function render( array $options = array() ) {
+
+        $out = '';
+        $this->options = array_merge($this->data, $options);
+
+        // THEME?
+        if(strlen(trim($this->options['theme']))) {
+            $this->setTheme($this->options['theme']);
+        }
+
+        $data = array();
+
+        $data['{url}'] = $this->encodeUrl($this->getPageUrl($this->options['url']));
+        $data['{title}'] = $this->encodeUrl($this->getPageTitle($this->options['title']));
+        $data['{text}'] = $this->encodeUrl($this->getPageText($this->options['text']));
+        $data['{tags}'] = $this->encodeUrl($this->options['tags']);
+        $data['{source}'] = $this->encodeUrl($this->options['source']);
+        $data['{media}'] = $this->encodeUrl($this->options['media']);
+
+        // $items = explode(",",str_replace(" ", "", $this->options["show"]));
+        $items = $this->options["show"];
+
+        foreach($items as $item) {
+
+            if($this->get($item . "_url") && $this->get($item . "_icon") && $this->get($item . "_params")) {
+
+                $sharerUrl = $this->get($item . "_url");
+                $icon = str_replace("{themeUrl}", $this->themeUrl, $this->get($item . "_icon"));
+                $params = $this->get($item . "_params");
+
+                $popup = " {$this->namespace}popup";
+                $target = " target='_blank'";
+
+                if($item == "email") {
+                    // $data["{text}"] = urldecode($data["{text}"]);
+                    // $data["{title}"] = urldecode($data["{title}"]);
+                    $params = str_replace(array_keys($data), array_values($data), $params);
+                    $popup = "";
+                    $target = "";
+                } else {
+                    $params = str_replace(array_keys($data), array_values($data), $params);
+                }
+
+                $out .= "<$this->item_wrapper_tag class='{$this->namespace}item {$this->namespace}{$item}{$popup}'>
+                            <a$target title='$item' href='{$sharerUrl}{$params}'>$icon</a>
+                        </$this->item_wrapper_tag>";
+            }
+        }
+
+        return "<$this->outer_wrapper_tag class='MarkupSocialShareButtons cf'>$out</$this->outer_wrapper_tag>";
+
+    }
+
+    /**
+     * Get the url to share. Validate it and get the page's http url
+     *
+     * Make sure it's real link, an internal page that is viewable
+     *
+     * Leave absolute urls alone, So if you need special urls with params etc
+     * set the url manually AND absolute with "http://..."
+     *
+     * @param  string $url Relative or absolute URL
+     * @return string     Absolute URL with protocol
+     */
+    public function ___getPageUrl($url) {
+
+        $url = $this->sanitizer->url($url);
+
+        // Veryfiy internal URLs, and if found return full http url
+        $relative = (strpos($url, "/") === 0) ? true : false;
+
+        if($url && $relative) {
+            $page = wire("pages")->get($url);
+            if($page->id && $page->viewable()) {
+                return $page->httpUrl;
+            }
+        }
+
+        // External URL?
+        // TODO: not sure if we should allow absolute URLs
+        // This could be handy to create urls that may have URL segments
+        if($url && strpos($url, "http") == 0) {
+            return $url;
+        }
+
+        // If no internal page found and not a full http url
+        // return currently viewed page. Let's see what happens ;)
+        if(wire("page")->viewable()) {
+            return wire("page")->httpUrl;
+        }
+
+        // if to this point no url is validated, we have a problem scotty
+        return false;
+
+    }
+
+    /**
+     * "Sanitize the title" Try to get a title from the current page
+     * if none is recieved from the options.
+     *
+     * Limit the word around 100 chars
+     *
+     */
+
+    public function ___getPageTitle($title) {
+
+        if(strlen(trim($title)) == 0){
+            if(wire("page")->get($this->title_fields)){
+                $title = wire("page")->get($this->title_fields);
+            }
+        }
+        return $this->truncateText($title, $this->char_limit, $this->char_limit_sypnosis);
+
+    }
+
+    /**
+     * Validate the text used for the share links
+     *
+     * If no text specified, try to get one from current page
+     *
+     *
+     * @param  [type] $text [description]
+     * @return [type]       [description]
+     */
+    public function ___getPageText($text) {
+
+        if(!$text) {
+            if(wire("page")->get($this->text_fields)) {
+                $text = wire("page")->get($this->text_fields);
+            }
+        }
+        // Cut text! ouch!
+        return $this->truncateText($text, $this->char_limit, $this->char_limit_sypnosis);
+
+    }
+
+    /**
+     * Look we can encode a URL!
+     *
+     * @param  string $url URL param string to encode
+     * @return string      encoded URL string
+     */
+    public function ___encodeURL($urlparam) {
+        $urlparam = htmlspecialchars_decode($urlparam, ENT_QUOTES);
+        return rawurlencode($urlparam);
+    }
+
+
+    /**
+     * Limit count of chars don't cut words. Really? Yes!
+     *
+     * It cuts and then searches for the last space in the string,
+     * then cut it again at that position. Simple?
+     * So it will always be shorter than the char_limit or exact or shorter.
+     *
+     */
+    public function truncateText($str = '', $limit = 120, $endstr = ' …') {
+
+        $str = strip_tags($str);
+
+        if($str == '') return '';
+        if(strlen($str) <= $limit) return $str;
+
+        $out = substr($str, 0, $limit);
+        $pos = strrpos($out, " ");
+        if ($pos > 0) {
+            $out = substr($out, 0, $pos);
+        }
+        $out .= $endstr;
+        return $out;
+
+    }
+
+
+    public static function getModuleConfigInputfields(array $data){
+
+        $inputfields = new InputfieldWrapper();
+
+        $services = wire("modules")->MarkupSocialShareButtons->services;
+        $defaults = wire("modules")->MarkupSocialShareButtons->data;
+        $data = array_merge( $defaults, $data );
+
+        $f = wire("modules")->InputfieldText;
+        $f->attr("name", "namespace");
+        $f->attr("value", $data['namespace']);
+        $f->columnWidth = 34;
+        $f->label = "Namespace";
+        $f->description = "Added to prefix css classes";
+        $inputfields->add($f);
+
+        $f = wire("modules")->InputfieldInteger;
+        $f->attr("name", "char_limit");
+        $f->attr("value", $data['char_limit']);
+        $f->columnWidth = 33;
+        $f->label = "Character limit";
+        $f->description = "Character limit for title and text";
+        $f->notes = "Will cut between words";
+        $inputfields->add($f);
+
+        $f = wire("modules")->InputfieldText;
+        $f->attr("name", "char_limit_sypnosis");
+        $f->attr("value", $data['char_limit_sypnosis']);
+        $f->columnWidth = 33;
+        $f->label = "Character limit sypnosis";
+        $f->description = "Added to end of cut text";
+        $inputfields->add($f);
+
+        // $f = wire("modules")->InputfieldText;
+        // $f->attr("name", "outer_wrapper_tag");
+        // $f->attr("value", $data['outer_wrapper_tag']);
+        // $f->columnWidth = 50;
+        // $f->label = "Outer HTML Tag";
+        // $f->description = "Change markup tag for outer wrapper. Will recieve class='MarkupSocialShareButtons cf'.";
+        // $inputfields->add($f);
+
+        // $f = wire("modules")->InputfieldText;
+        // $f->attr("name", "item_wrapper_tag");
+        // $f->attr("value", $data['item_wrapper_tag']);
+        // $f->columnWidth = 50;
+        // $f->label = "Item HTML tag";
+        // $f->description = "Change markup tag for item wrapper. Will recieve class='" . $data['namespace']  ."item " . $data['namespace'] . "servicename " . $data['namespace'] ."popup'.";
+        // $inputfields->add($f);
+
+        $f = wire("modules")->InputfieldText;
+        $f->attr("name", "title_fields");
+        $f->attr("value", $data['title_fields']);
+        $f->columnWidth = 50;
+        $f->label = "Title fields to search";
+        $f->description = "Use these field to search for {title} if none is set";
+        $inputfields->add($f);
+
+        $f = wire("modules")->InputfieldText;
+        $f->attr("name", "text_fields");
+        $f->attr("value", $data['text_fields']);
+        $f->columnWidth = 50;
+        $f->label = "Text fields to search";
+        $f->description = "Use these field to search for the {text} if none is set";
+        $inputfields->add($f);
+
+
+        $f = wire("modules")->InputfieldSelect;
+        $f->attr("name", "theme");
+        $themePath = wire("config")->paths->MarkupSocialShareButtons . self::THEMEPATH_LOCAL . "/";
+        foreach(new DirectoryIterator($themePath) as $theme){
+            if($theme->isDot()) continue;
+            if($theme->isDir()) $f->addOption($theme->getFilename(), $theme->getFilename());
+        }
+        $f->attr("value", $data['theme']);
+        $f->label = "Theme (default)";
+        $f->description = "The icon theme to choose from. They are just html/text strings that are inserted into the links when rendering.";
+        $f->notes = "These bundled with this module are theme.php files located in the modules themes/theme/ folder."
+                    . " You can also enter custom markup for the icons if you don't set a theme here,"
+                    . " the service configurations will show a new textarea field to enter icons markup manually.";
+        $inputfields->add($f);
+
+
+        $f = wire("modules")->InputfieldMarkup;
+        $f->label = "Theme Preview";
+        $f->showIf = "theme!=0";
+        $themeBaseUrl = wire("config")->urls->MarkupSocialShareButtons . self::THEMEPATH_LOCAL . "/";
+        $themeCSSUrl = '';
+        $loadCSS = "false";
+        if($data['theme']) {
+            $themeCSSUrl = $themeBaseUrl . $data['theme'] . "/theme.css";
+            $loadCSS = "true";
+        }
+        $adminAjaxUrl = wire('config')->urls->admin . "module/edit?name=MarkupSocialShareButtons";
+        $previewRender = wire("modules")->MarkupSocialShareButtons->render();
+        $f->value = <<<_MARKUP
+        <div class='mssb-preview clearfix' style='overflow: hidden; min-height: 80px; background-color: #aaa; padding:20px'>
+            {$previewRender}
+        </div>
+            <script>
+            $('head').append($('<link class="mssb-theme-cssfile" rel="stylesheet" href="$themeCSSUrl"/>'));
+            $('[name=theme]').on('change',function(){
+                var mssb_theme_val = $(this).val();
+                if(mssb_theme_val){
+                    $.ajax({
+                        url: '{$adminAjaxUrl}',
+                        type: 'post',
+                        data: {
+                            MarkupSocialShareButtons: 'loadtheme',
+                            theme: mssb_theme_val
+                        },
+                        success: function(data){
+                            $('.mssb-preview *').hide().html(data).fadeIn();
+                            $('.mssb-theme-cssfile').attr('href', '$themeBaseUrl' + mssb_theme_val + '/theme.css');
+                        }
+                    });
+                }
+                return true;
+            });</script>
+_MARKUP;
+
+        $inputfields->add($f);
+
+        $f = wire("modules")->InputfieldAsmSelect;
+        $f->attr("name", "show");
+        foreach($services as $service) $f->addOption($service, $service);
+        $f->attr("value", $data['show']);
+        $f->label = "What buttons to show (default)";
+        $f->description = "Choose from the list and sort them as you wish. You can also set as option via API as an array of the social sevices. Will be output in the same order specified.";
+        $inputfields->add($f);
+
+
+        foreach( $services as $service ) {
+
+            $f = wire("modules")->InputfieldText;
+            $f->attr("name", $service . "_url");
+            $f->showIf = "show=" . $service;
+            $f->columnWidth = 50;
+            $f->attr("value", $data[$service . '_url']);
+            $f->label = $service . " URL";
+            $f->description = "Base URL for $service link";
+            $inputfields->add($f);
+
+            $f = wire("modules")->InputfieldText;
+            $f->attr("name", $service . "_params");
+            $f->showIf = "show=" . $service;
+            $f->columnWidth = 50;
+            $f->attr("value", $data[$service . '_params']);
+            $f->label = $service . " parameters";
+            $f->description = "Can be any of the allowed $service params.";
+            $f->notes = "Use placeholders for the available values like: {url} {title} {text} {tags} {source} {media}";
+            $inputfields->add($f);
+
+            $f = wire("modules")->InputfieldTextarea;
+            $f->attr("name", $service . "_icon");
+            $f->showIf = "theme=0, show=" . $service;
+            $f->attr("rows", 3);
+            $f->attr("value", $data[$service . '_icon']);
+            $f->label = $service . " icon markup";
+            $f->description = "Can be anything HTML or SVG IMG etc.";
+            $f->notes = "These setting would be the default for all calls, but can be overwritten in a template code call)";
+            $inputfields->add($f);
+
+        }
+
+        return $inputfields;
+
+    }
+
+
+    public function addServices(array $services = array()){
+        foreach($services as $key => $value){
+            $this->services[] = $key;
+            if(is_array($value)){
+                foreach($value as $k => $v) $this->set($k,$v);
+            }
+        }
+
+        return $this;
+    }
+}

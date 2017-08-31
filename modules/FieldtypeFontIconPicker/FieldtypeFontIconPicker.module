@@ -1,0 +1,66 @@
+<?php
+
+/**
+ * Class FieldtypeFontIconPicker
+ *
+ * @author			: İskender TOTOĞLU, @ukyo (community), @trk (Github)
+ * @website			: http://altivebir.com.tr
+ * @projectWebsite	: https://github.com/trk/FieldtypeFontIconPicker
+ */
+class FieldtypeFontIconPicker extends Fieldtype {
+
+	public static function getModuleInfo() {
+		return array(
+			'title' => 'FieldtypeFontIconPicker',
+			'summary' => __('Allow you to use icon picker input field.'),
+			'version' => 16,
+			'author' => 'İskender TOTOĞLU | @ukyo(community), @trk (Github), http://altivebir.com.tr',
+			'icon' => 'flag-o',
+			'href' => 'https://github.com/trk/FieldtypeFontIconPicker',
+			'installs' => array(
+				'InputfieldFontIconPicker',
+				'MarkupFontIconPicker'
+			),
+		);
+	}
+
+	public function init() {
+		parent::init();
+	}
+
+	/**
+	 * Return the associated InputfieldFontIconPicker
+	 *
+	 */
+	public function getInputfield(Page $page, Field $field) {
+		$inputField = $this->modules->get('InputfieldFontIconPicker');
+		return $inputField;
+	}
+
+	/**
+	 * Sanitize value for storage
+	 */
+	public function sanitizeValue(Page $page, Field $field, $value) {
+        $InputfieldFontIconPicker = $this->getInputfield($page, $field);
+        $InputfieldFontIconPicker->font_library = $field->font_library;
+		$options = $InputfieldFontIconPicker->beforeRender();
+		if(array_key_exists('attributes', $options['icons']) && array_key_exists('prefix', $options['icons']['attributes'])) {
+            $value = str_replace($options['icons']['attributes']['prefix'], '', $value);
+        }
+		return $value;
+	}
+
+	/**
+	 * Return the database schema in specified format
+	 *
+	 */
+	public function getDatabaseSchema(Field $field) {
+
+		// get the default schema
+		$schema = parent::getDatabaseSchema($field);
+
+		$schema['data'] = "VARCHAR(255) NOT NULL DEFAULT ''";
+
+		return $schema;
+	}
+}
