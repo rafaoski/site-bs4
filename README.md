@@ -19,7 +19,6 @@
 [FieldtypeEmailLanguage](http://modules.processwire.com/modules/fieldtype-email-language/)  
 MODULES CORE =>  Comments, Forgot Password, Languages Support, Select Options  
 
-
 #### If you want to use GULP STACK you must install these packages on your system:
 [Node.js](https://nodejs.org/en/)  
 [GULP](https://github.com/gulpjs/gulp/blob/master/docs/getting-started.md)  
@@ -29,7 +28,7 @@ MODULES CORE =>  Comments, Forgot Password, Languages Support, Select Options
 npm install  
 bower install  
 
-#### Go to gulpfile.js and change in line 17 -- proxy: "localhost/processwire-folder/" To your local processwire-installation -- like:
+#### Go to gulpfile.js and change in line 26 -- proxy: "localhost/processwire-folder/" To your local processwire-installation -- like:
 localhost/my-local-folder-processwire-installation/
 
 #### Now Use This Command to Watch all changes:
@@ -39,3 +38,6 @@ gulp watch
 
 #### To Minify CSS Use This Command:
 gulp minify-css
+
+#### To create a zip file of pure files in the ./build folder, use the command:
+gulp build

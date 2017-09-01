@@ -177,8 +177,8 @@ if($page->check_1) {
 // COMMENTS CSS ( Check if comments && template == single-news)
 echo linkStyle('comments.css', ['check','comments'], page()->template->name == 'single-news');
 
-// MASTER JS
-echo scriptSrc('scripts.min.js');
+// MASTER JS ( ./assets/js/master/scripts.min.js)
+echo scriptSrc('/master/scripts.min.js');
 
 // COMMENTS JS ( Check if comments && template == single-news)
 echo scriptSrc('comments.min.js', ['check','comments'], page()->template->name == 'single-news');

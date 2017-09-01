@@ -1,14 +1,23 @@
-var gulp = require('gulp');
-var browserSync = require('browser-sync').create();
-var zip = require('gulp-zip');
+var gulp = require('gulp')
+var browserSync = require('browser-sync').create()
+var zip = require('gulp-zip')
 
-var concat = require('gulp-concat');
-var rename = require('gulp-rename');
-var uglify = require('gulp-uglify');
+var concat = require('gulp-concat')
+var rename = require('gulp-rename')
+var uglify = require('gulp-uglify')
 
-var sass = require('gulp-sass');
-var autoprefixer = require('gulp-autoprefixer');
-var sourcemaps = require('gulp-sourcemaps');
+var sass = require('gulp-sass')
+var autoprefixer = require('gulp-autoprefixer')
+var sourcemaps = require('gulp-sourcemaps')
+var clean = require("gulp-clean")
+
+// CLEAN JS FILE
+gulp.task('clean-js', function () {
+    return gulp.src([
+        './assets/js/scripts.min.js'
+    ], {force: true})
+        .pipe(clean())
+})
 
 // Static Server + watching scss/php files
 gulp.task('serve', ['sass', 'copy-fonts',  'scripts'], function() {
@@ -21,9 +30,10 @@ gulp.task('serve', ['sass', 'copy-fonts',  'scripts'], function() {
             // browser: "firefox"
     });
 
-    gulp.watch("assets/scss/*.scss", ['sass']);
-    gulp.watch("./**/*.php").on('change', browserSync.reload);
-});
+    gulp.watch("assets/scss/*.scss", ['sass'])
+    gulp.watch("assets/js/*.js", ['scripts'])
+    gulp.watch("./**/*.php").on('change', browserSync.reload)
+})
 
 // Compile sass into CSS & auto-inject into browsers
 gulp.task('sass', function() {
@@ -42,8 +52,8 @@ gulp.task('sass', function() {
         .pipe(sourcemaps.write('.'))
 
         .pipe(gulp.dest("assets/css"))
-        .pipe(browserSync.stream());
-});
+        .pipe(browserSync.stream())
+})
 
 //Compress SCSS File
 gulp.task('minify-css', function() {
@@ -60,10 +70,10 @@ gulp.task('minify-css', function() {
 
         .pipe(gulp.dest("assets/css"))
 
-});
+})
 
 
-gulp.task('scripts', function() {
+gulp.task('scripts', ['clean-js'], function() {
     return gulp.src([
                 './bower_components/jquery/dist/jquery.min.js',
                 './bower_components/owl.carousel/dist/owl.carousel.min.js',
@@ -74,38 +84,13 @@ gulp.task('scripts', function() {
                 './bower_components/headroom.min/index.js',
                 './assets/js/custom.js'
     ])
-        .pipe(concat('scripts.js'))
-        .pipe(gulp.dest('./assets/js/'))
-        .pipe(rename('scripts.min.js'))
+        .pipe(concat('scripts.min.js'))
+        // .pipe(gulp.dest('./assets/js/master/'))
+        // .pipe(rename('scripts.min.js'))
         .pipe(uglify())
-        .pipe(gulp.dest('./assets/js/'));
-});
-
-
-//Create Folder build with zip package
-// gulp.task('zip', ['minify-css', 'copy-fonts',  'scripts'], () =>
-//     gulp.src([
-//         './**', '!./assets/img/raw{,/**/*}',
-//         '!./build-template{,/**/*}',
-//         '!./nbproject{,/**/*}',
-//         '!./bower_components{,/**/*}',
-//         '!./node_modules{,/**/*}',
-//         '!./bower.json',
-//         '!./assets/css/master.css.map',
-//         '!package.json',
-//         '!gulpfile.js',
-//         '!.gitignore',
-//         '!README.md',
-//         './master'
-//     ])
-//     .pipe(zip('your-page.zip'))
-//     .pipe(gulp.dest('./build'))
-// );
-
-gulp.task('copy-fonts', function() {
-    gulp.src('./bower_components/font-awesome/fonts/**/*')
-        .pipe(gulp.dest('./assets/fonts'));
-});
+        .pipe(gulp.dest('./assets/js/master/'))
+        .pipe(browserSync.stream())
+})
 
 // gulp.task('copy-js', function() {
 //     gulp.src([
@@ -121,9 +106,32 @@ gulp.task('copy-fonts', function() {
 //         .pipe(gulp.dest('./assets/css'));
 // });
 
+//Create Folder build with zip package
+gulp.task('zip', ['minify-css', 'copy-fonts',  'scripts'], () =>
+    gulp.src([
+        '!./build-template{,/**/*}',
+        '!./nbproject{,/**/*}',
+        '!./bower_components{,/**/*}',
+        '!./node_modules{,/**/*}',
+        '!./bower.json',
+        '!./assets/css/master.css.map',
+        '!package.json',
+        '!gulpfile.js',
+        '!.gitignore',
+        '!README.md',
+        './**/*'
+    ])
+    .pipe(zip('your-page.zip'))
+    .pipe(gulp.dest('./build'))
+)
+
+gulp.task('copy-fonts', function() {
+    gulp.src('./bower_components/font-awesome/fonts/**/*')
+        .pipe(gulp.dest('./assets/fonts'))
+})
 
 //Watch For changes
-gulp.task('watch', ['serve']);
+gulp.task('watch', ['serve'])
 
 //Build Package zip
-gulp.task('build', ['zip']);
+gulp.task('build', ['zip'])
