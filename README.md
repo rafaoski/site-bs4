@@ -8,6 +8,7 @@
 [Owl Carousel 2](https://owlcarousel2.github.io/OwlCarousel2/)  
 [Jarallax](https://github.com/nk-o/jarallax)  
 [Headroom.js](http://wicky.nillia.ms/headroom.js/)  
+[MixitUp](https://www.kunkalabs.com/mixitup/)  
 
 ### Installed Modules:
 [TracyDebugger](http://modules.processwire.com/modules/tracy-debugger/)  

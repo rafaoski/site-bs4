@@ -153,7 +153,9 @@
                                                        $lang_class = "text-primary";
                                                }
                                                $url = $page->localUrl($language); 
-                                               $hreflang = $homepage->getLanguageValue($language, 'name'); 
+                                               $hreflang = $homepage->getLanguageValue($language, 'name');
+                                                // IF DELETE the en in homepage setting add default lang
+                                                if ( $hreflang == 'home' )  { $hreflang = 'en'; }
                                                $lang_m .= "<a class='$lang_class dropdown-item' hreflang='$hreflang' href='$url'>";
                                                $lang_m .= "<img src='{$config->urls->templates}assets/img/flags/32x32/{$language->title}.png' alt='flag-{$language->name}'>";
                                                $lang_m .=  $language->title;
