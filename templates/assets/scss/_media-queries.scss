@@ -1,7 +1,14 @@
 /*UP*/
 @include media-breakpoint-up(xs) {}
 @include media-breakpoint-up(sm) {}
-@include media-breakpoint-up(md) {}
+
+@include media-breakpoint-up(md) {
+//logo momile
+   .logo-mobile {
+    display: none;
+   }
+}
+
 @include media-breakpoint-up(lg) {}
 @include media-breakpoint-up(xl) {}
 
@@ -17,7 +24,7 @@
             font-size: 1.5rem;
         }
     }
-    
+
  #header-content {
     height: 45vh;
     margin-bottom: 1.5rem;
@@ -41,6 +48,25 @@
     .s-butt {
         display: none;
     }
+
+ //logo momile
+   .logo-mobile {
+    img {
+        background-color: $transparent;
+        padding: .3rem;
+        margin: .2rem;
+        border: 2px solid $transparent;
+        transition: $t-out;
+        &:hover {
+         background-color: $light-gray;
+          padding: .3rem;
+          margin: .2rem;
+          border: 2px solid $like-orange;
+      }
+   
+      }
+   }
+
 }
 @include media-breakpoint-down(lg) {
     // Hide Some Elements With Large Screen

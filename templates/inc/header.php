@@ -229,7 +229,13 @@ if( $vid_link != '' ) {
 } ?>
     
   <div id='jar-content' class="cont-jar text-center">
-      
+
+    <div id='l-mobile' class='logo-mobile pt-3'>
+        <a href="<?=$homepage->url?>">
+            <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
+        </a>
+    </div>
+  
         <div id="header-content" class='container-fluid d-flex justify-content-center align-content-center flex-wrap'>
 
             <?php if(page()->title) : ?>
@@ -259,8 +265,17 @@ if( $vid_link != '' ) {
           </a> 
 
   </div><!-- /container -->
-  
+
 </div><!-- /headerwrap -->
+
+<?php
+else : ?>
+
+<div id='l-mobile' class='logo-mobile pt-3'>
+    <a href="<?=$homepage->url?>">
+        <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
+    </a>
+</div>
 
 <?php
     // ENDIF ENABLE PARALLAX EFFECT
