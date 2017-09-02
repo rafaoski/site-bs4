@@ -8,15 +8,15 @@
 
               <div class="logo col-lg-3 align-self-center">
                   
-                  <a href="<?=$homepage->url?>">
-                      <?php if($options->img_1) {
-                          $logo = $options->img_1
-                       ?>
-                      <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
-                      <?php } else {
-                          echo "<h3 class='display-4'>$options->txt_1</h3>";
-                      } ?>
-                  </a>
+                <a href="<?=$homepage->url?>">
+                    <?php if($options->img_1) {
+                        $logo = $options->img_1
+                    ?>
+                    <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
+                    <?php } else {
+                        echo "<h3 class='text-center text-uppercase display-4'>$options->txt_1</h3>";
+                    } ?>
+                </a>
                   
               </div><!-- /.logo -->
 
@@ -147,19 +147,19 @@
                                            if(!$page->viewable($language)) {
                             continue;
                         } 
-                                               if($language->id == $user->language->id) {
-                                                       $lang_class = "bg-primary text-white";
-                                               } else {
-                                                       $lang_class = "text-primary";
-                                               }
-                                               $url = $page->localUrl($language); 
-                                               $hreflang = $homepage->getLanguageValue($language, 'name');
-                                                // IF DELETE the en in homepage setting add default lang
-                                                if ( $hreflang == 'home' )  { $hreflang = 'en'; }
-                                               $lang_m .= "<a class='$lang_class dropdown-item' hreflang='$hreflang' href='$url'>";
-                                               $lang_m .= "<img src='{$config->urls->templates}assets/img/flags/32x32/{$language->title}.png' alt='flag-{$language->name}'>";
-                                               $lang_m .=  $language->title;
-                                               $lang_m .=  "</a>";
+                                        if($language->id == $user->language->id) {
+                                                $lang_class = "bg-primary text-white";
+                                        } else {
+                                                $lang_class = "text-primary";
+                                        }
+                                        $url = $page->localUrl($language); 
+                                        $hreflang = $homepage->getLanguageValue($language, 'name');
+                                        // IF DELETE the en in homepage setting add default lang
+                                        if ( $hreflang == 'home' )  { $hreflang = 'en'; }
+                                        $lang_m .= "<a class='$lang_class dropdown-item' hreflang='$hreflang' href='$url'>";
+                                        $lang_m .= "<img src='{$config->urls->templates}assets/img/flags/32x32/{$language->title}.png' alt='flag-{$language->name}'>";
+                                        $lang_m .=  $language->title;
+                                        $lang_m .=  "</a>";
                                        }
                             echo $lang_m;                    
                         ?>
@@ -230,12 +230,22 @@ if( $vid_link != '' ) {
     
   <div id='jar-content' class="cont-jar text-center">
 
-    <div id='l-mobile' class='logo-mobile pt-3'>
-        <a href="<?=$homepage->url?>">
+<a href="<?=$homepage->url?>">
+
+    <?php if($options->img_1) { $l_m = '';?>  
+
+        <div id='l-mobile' class='logo-mobile pt-3'>   
             <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
-        </a>
-    </div>
-  
+        </div>
+
+        <?php } else {
+            $l_m = "<div id='l-mobile' class='logo-mobile pt-3'>";
+            $l_m .= "<h3 class='text-uppercase text-center display-4'>$options->txt_1</h3>";
+            $l_m .= "</div>";
+            echo $l_m; 
+        } ?> 
+
+</a> 
         <div id="header-content" class='container-fluid d-flex justify-content-center align-content-center flex-wrap'>
 
             <?php if(page()->title) : ?>
@@ -271,12 +281,22 @@ if( $vid_link != '' ) {
 <?php
 else : ?>
 
-<div id='l-mobile' class='logo-mobile pt-3'>
-    <a href="<?=$homepage->url?>">
-        <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
-    </a>
-</div>
+<a href="<?=$homepage->url?>">
 
-<?php
-    // ENDIF ENABLE PARALLAX EFFECT
+    <?php if($options->img_1) { $l_m = '';?>  
+
+        <div id='l-mobile' class='logo-mobile pt-3'>   
+            <img class="mx-auto d-block img-fluid" src="<?=$logo->url?>" alt="logo" width='<?=$logo->width?>' height='<?=$logo->height?>'>
+        </div>
+
+        <?php } else {
+            $l_m = "<div id='l-mobile' class='logo-mobile pt-3'>";
+            $l_m .= "<h3 class='text-uppercase text-center display-4'>$options->txt_1</h3>";
+            $l_m .= "</div>";
+            echo $l_m; 
+        } ?> 
+
+</a> 
+
+<?php // ENDIF ENABLE PARALLAX EFFECT
     endif; ?>
