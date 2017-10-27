@@ -55,6 +55,6 @@ if($input->urlSegment1 == 'rss' && $page->id == 1103) {
 die();
 }
 
-include '_func.php';
+include_once('./_func.php');
 
 
