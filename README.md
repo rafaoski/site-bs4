@@ -1,15 +1,6 @@
 # Page Profile For [Processwire 3x](https://processwire.com/) with using functions like:
 ### [MarkupRegions](https://processwire.com/blog/posts/processwire-3.0.49-introduces-a-new-template-file-strategy/)
 ### [FunctionsAPI](https://processwire.com/blog/posts/processwire-3.0.39-core-updates/)  
-
-### Added Packages:
-[Bootstrap 4](https://getbootstrap.com/)  
-[Font Awesome](http://fontawesome.io/)  
-[Owl Carousel 2](https://owlcarousel2.github.io/OwlCarousel2/)  
-[Jarallax](https://github.com/nk-o/jarallax)  
-[Headroom.js](http://wicky.nillia.ms/headroom.js/)  
-[MixitUp](https://www.kunkalabs.com/mixitup/)  
-
 ### Installed Modules:
 [TracyDebugger](http://modules.processwire.com/modules/tracy-debugger/)  
 [FieldtypeColor](https://modules.processwire.com/modules/fieldtype-color/)  
@@ -41,3 +32,11 @@ gulp minify-css
 
 #### To create a zip file of pure files in the ./build folder, use the command:
 gulp build
+
+### References:
+[Bootstrap 4](https://getbootstrap.com/)  
+[Font Awesome](http://fontawesome.io/)  
+[Owl Carousel 2](https://owlcarousel2.github.io/OwlCarousel2/)  
+[Jarallax](https://github.com/nk-o/jarallax)  
+[Headroom.js](http://wicky.nillia.ms/headroom.js/)  
+[MixitUp](https://www.kunkalabs.com/mixitup/)  
